@@ -41,7 +41,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 
 	switch msg := msg.(type) {
-
 	case spinner.TickMsg:
 		if !m.done {
 			m.spinner, cmd = m.spinner.Update(msg)
@@ -64,7 +63,6 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			return m, tea.Quit
 		}
 	}
-
 	return m, nil
 }
 
@@ -72,7 +70,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 // View: display banner, spinner or logs, and exit prompt
 // -------------------
 func (m model) View() string {
-	// Banner
+	// Banner always at the top.
 	s := color.CyanString(`
    ____ _                    __ _         
   / ___| | ___  __ _ _ __  / _(_) __ _  
@@ -82,13 +80,13 @@ func (m model) View() string {
                                   |___/ 
 `) + "\n"
 
-	// While not done, show spinner and progress text.
+	// While cleanup is running, show spinner and progress.
 	if !m.done {
 		s += m.spinner.View() + color.YellowString("  Cleaning in progress...\n\n")
 		return s
 	}
 
-	// Once done, show logs or error.
+	// Once done, show logs or error along with overall summary.
 	if m.err != nil {
 		s += color.RedString("Error: %v\n\n", m.err)
 	} else {
@@ -98,7 +96,6 @@ func (m model) View() string {
 		s += color.GreenString("\nCleanup complete! 🚀\n")
 		s += color.WhiteString("\nPress any key to exit...")
 	}
-
 	return s
 }
 
@@ -116,10 +113,11 @@ func doCleanupCmd() tea.Cmd {
 }
 
 // -------------------
-// runCleanup: actual file deletion process
+// runCleanup: actual file deletion process with metrics
 // -------------------
 func runCleanup() ([]string, error) {
 	var logs []string
+	var overallTotal, overallSuccess, overallFailures int
 
 	// Get the current user's TEMP directory.
 	userTemp := os.Getenv("TEMP")
@@ -141,31 +139,37 @@ func runCleanup() ([]string, error) {
 	// Iterate through directories.
 	for _, dir := range dirs {
 		logs = append(logs, color.MagentaString("Cleaning directory: %s", dir))
-
 		items, err := ioutil.ReadDir(dir)
 		if err != nil {
 			logs = append(logs, color.RedString("Error reading %s: %v", dir, err))
 			continue
 		}
 
-		var failures int
+		var dirTotal, dirSuccess, dirFailures int
+
 		for _, item := range items {
+			dirTotal++
+			overallTotal++
 			fullPath := filepath.Join(dir, item.Name())
 			if err := os.RemoveAll(fullPath); err != nil {
-				failures++
+				dirFailures++
+				overallFailures++
 				logs = append(logs, color.RedString("Failed to remove %s: %v", fullPath, err))
 			} else {
+				dirSuccess++
+				overallSuccess++
 				logs = append(logs, color.GreenString("Successfully removed %s", fullPath))
 			}
 		}
 
-		if failures > 0 {
-			logs = append(logs, color.RedString("Some files in %s could not be removed.", dir))
-		} else {
-			logs = append(logs, color.GreenString("Finished cleaning directory: %s", dir))
-		}
+		// Log directory summary.
+		logs = append(logs, color.BlueString("Summary for %s: Total: %d, Success: %d, Failures: %d", dir, dirTotal, dirSuccess, dirFailures))
 		logs = append(logs, "") // Blank line for spacing
 	}
+
+	// Append overall summary.
+	overallSummary := color.CyanString("Overall Summary: Total Files Processed: %d, Success: %d, Failures: %d", overallTotal, overallSuccess, overallFailures)
+	logs = append(logs, overallSummary)
 
 	return logs, nil
 }
@@ -177,9 +181,10 @@ func main() {
 	s := spinner.New()
 	s.Spinner = spinner.Dot
 
+	// Disable the alternate screen mode so the banner and logs remain visible.
 	p := tea.NewProgram(model{
 		spinner: s,
-	})
+	}, tea.WithAltScreen())
 	if _, err := p.Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
