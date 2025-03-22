@@ -1,6 +1,6 @@
 # WindowsTempCleanify
 
-A command-line tool and script written in Go that automates the cleanup of temporary files on Windows. It cleans your user TEMP directory, Windows system temporary directory, and Prefetch directory.
+A command-line tool and script written in Go that automates the cleanup of temporary files on Windows. It cleans your user TEMP directory, Windows system temporary directory, Prefetch directory and Recycle Bin.
 
 ---
 
@@ -16,6 +16,7 @@ A command-line tool and script written in Go that automates the cleanup of tempo
   - The user's TEMP `%temp%` directory
   - `C:\Windows\Temp`
   - `C:\Windows\Prefetch`
+  - `C:\$Recycle.Bin` recycle bin
 
 - **Interactive TUI:**  
   Uses Bubble Tea to display:
