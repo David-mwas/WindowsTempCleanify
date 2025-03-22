@@ -134,6 +134,7 @@ func runCleanup() ([]string, error) {
 		userTemp,              // Current user's TEMP directory
 		`C:\Windows\Temp`,     // Windows system temporary directory
 		`C:\Windows\Prefetch`, // Windows Prefetch directory
+		`C:\$Recycle.Bin`, //Recycle Bin 
 	}
 
 	// Iterate through directories.

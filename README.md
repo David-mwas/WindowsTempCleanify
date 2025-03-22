@@ -1,28 +1,32 @@
 # WindowsTempCleanify
 
-A command-line tool and script written in Go that automates the cleanup of temporary files on Windows. It cleans your user TEMP directory, Windows system temporary directory, and Prefetch directory. 
+A command-line tool and script written in Go that automates the cleanup of temporary files on Windows. It cleans your user TEMP directory, Windows system temporary directory, and Prefetch directory.
 
 ---
-![cleanify.png](assets/cleanify.png)
----
 
+## ![banner.png](assets/banner.png)
+
+## ![cleanify.png](assets/cleanify.png)
 
 ## Features
 
 - **Automated Cleanup:**  
   Removes files from:
+
   - The user's TEMP `%temp%` directory
   - `C:\Windows\Temp`
   - `C:\Windows\Prefetch`
 
 - **Interactive TUI:**  
   Uses Bubble Tea to display:
+
   - A colorful banner
   - A progress spinner
   - Detailed logs for each deletion operation
 
 - **Detailed Metrics:**  
   Provides per-directory and overall summaries:
+
   - Total files processed
   - Number of successful deletions
   - Number of failures
@@ -31,7 +35,6 @@ A command-line tool and script written in Go that automates the cleanup of tempo
   After cleanup, the TUI displays a prompt ("Press any key to exit...") and waits for your input before quitting.
 
   <!-- download the script -->
-
 
 ## Prerequisites
 
@@ -79,10 +82,10 @@ If you prefer to build Cleanify yourself rather than downloading a pre-built exe
 5. **Run Cleanify:**
 
    For best results (especially when cleaning system directories), run the executable with administrator privileges:
-   
+
    - Right-click on `cleanify.exe` and select **Run as administrator**, or
    - Open an elevated PowerShell/Command Prompt and execute:
-     
+
      ```bash
      .\cleanify.exe
      ```
@@ -90,6 +93,7 @@ If you prefer to build Cleanify yourself rather than downloading a pre-built exe
 ## Code Overview
 
 The project is implemented in a single Go file (`main.go`) and leverages:
+
 - **Bubble Tea:** For building the TUI.
 - **Bubbles (Spinner):** For an animated progress indicator.
 - **Fatih's Color:** For colorized terminal output.
