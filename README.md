@@ -50,14 +50,14 @@ If you prefer to build Cleanify yourself rather than downloading a pre-built exe
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/yourusername/cleanify.git
+   git clone https://github.com/david-mwas/cleanify.git
    cd cleanify
    ```
 
 2. **Initialize the Go Module (if not already initialized):**
 
    ```bash
-   go mod init github.com/yourusername/cleanify
+   go mod init github.com/david-mwas/cleanify
    ```
 
 3. **Download Dependencies:**
