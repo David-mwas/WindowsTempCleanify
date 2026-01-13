@@ -50,7 +50,7 @@ If you prefer to build Cleanify yourself rather than downloading a pre-built exe
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/david-mwas/cleanify.git
+   git clone https://github.com/David-mwas/WindowsTempCleanify.git
    cd cleanify
    ```
 
