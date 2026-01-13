@@ -51,7 +51,7 @@ If you prefer to build Cleanify yourself rather than downloading a pre-built exe
 
    ```bash
    git clone https://github.com/David-mwas/WindowsTempCleanify.git
-   cd cleanify
+   cd WindowsTempCleanify
    ```
 
 2. **Initialize the Go Module (if not already initialized):**
